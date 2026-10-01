@@ -1,20 +1,10 @@
 [project]
 name = "dure-maliha-ml-collab"
 version = "0.1.0"
-description = "Add your description here"
-authors = [
-    { name = "Maliha-Fatima916", email = "fatimamaliha024@gmail.com" }
-]
+description = "Reproducible Adult Income classification with Git and DVC"
 requires-python = ">=3.13"
 dependencies = [
     "pandas>=3.0.6",
     "pyyaml>=6.0.3",
-    "scikit-learn>=1.9.1",
+    "scikit-learn>=1.9.1"
 ]
-
-[project.scripts]
-dure-maliha-ml-collab = "dure_maliha_ml_collab:main"
-
-[build-system]
-requires = ["uv_build>=0.12.21,<0.13.0"]
-build-backend = "uv_build"
