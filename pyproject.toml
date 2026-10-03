@@ -4,9 +4,10 @@ version = "0.1.0"
 description = "Reproducible Adult Income classification with Git and DVC"
 requires-python = ">=3.13"
 dependencies = [
+    "dvc[dagshub]>=3.67.1",
     "pandas>=3.0.6",
     "pyyaml>=6.0.3",
-    "scikit-learn>=1.9.1"
+    "scikit-learn>=1.9.1",
 ]
 
 [dependency-groups]
