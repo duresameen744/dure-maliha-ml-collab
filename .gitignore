@@ -11,13 +11,6 @@ __pycache__/
 # Experiment tracking
 mlruns/
 
-# Data and models: DVC tracks these, not Git.
-# Ignore the files but keep the small .dvc pointer files.
-data/raw/*
-data/processed/*
-models/*
-!data/**/*.dvc
-!models/*.dvc
 
 # DVC local-only files (may hold credentials)
 .dvc/config.local
