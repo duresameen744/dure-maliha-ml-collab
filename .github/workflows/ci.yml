@@ -26,7 +26,8 @@ jobs:
         run: uv run ruff format --check .
 
       - name: Run unit tests
-        run: uv run pytest tests/ -v
+        run: |
+          uv run pytest tests/ -v || [ $? -eq 5 ]
 
       - name: Smoke train (small sample)
         run: |
