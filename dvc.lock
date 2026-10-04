@@ -5,8 +5,8 @@ stages:
     deps:
     - path: data/raw/adult.csv
       hash: md5
-      md5: b4bd4a7dd728e2fd8cca9668a4b17047
-      size: 5319899
+      md5: eba0631b1609837856e166c99b2f4f55
+      size: 4984605
     - path: src/data_cleaning.py
       hash: md5
       md5: 09e2a6bdc364356aa438431ffd3311e7
@@ -83,5 +83,5 @@ stages:
     outs:
     - path: metrics.json
       hash: md5
-      md5: 9ae0690f2c8ac81a2266eddd70a1d9c3
+      md5: e256ad96f6d9b59db5a0e4f19c33a35d
       size: 197
