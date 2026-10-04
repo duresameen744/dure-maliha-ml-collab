@@ -1,24 +1,36 @@
+"""Train stage: fit a Random Forest on the prepared training split."""
+
+import pickle
 from pathlib import Path
 
 import pandas as pd
+import yaml
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
-from sklearn.model_selection import train_test_split
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "data" / "raw" / "adult.csv"
+PROCESSED = ROOT / "data" / "processed"
+MODELS = ROOT / "models"
 
 
 def main():
-    df = pd.read_csv(DATA)
-    y = (df["class"] == ">50K").astype(int)
-    X = pd.get_dummies(df.drop(columns="class"))
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
+    with open(ROOT / "params.yaml") as f:
+        params = yaml.safe_load(f)
+    seed = params["seed"]
+    n_estimators = params["train"]["n_estimators"]
+    max_depth = params["train"]["max_depth"]
+
+    X_train = pd.read_csv(PROCESSED / "X_train.csv")
+    y_train = pd.read_csv(PROCESSED / "y_train.csv").squeeze("columns")
+
+    model = RandomForestClassifier(
+        n_estimators=n_estimators, max_depth=max_depth, random_state=seed
     )
-    model = RandomForestClassifier(n_estimators=100, max_depth=6, random_state=42)
     model.fit(X_train, y_train)
-    print("accuracy:", accuracy_score(y_test, model.predict(X_test)))
+
+    MODELS.mkdir(parents=True, exist_ok=True)
+    with open(MODELS / "model.pkl", "wb") as f:
+        pickle.dump(model, f)
+    print(f"Trained model saved to {MODELS / 'model.pkl'}")
 
 
 if __name__ == "__main__":
