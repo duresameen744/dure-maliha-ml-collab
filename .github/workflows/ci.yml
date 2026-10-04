@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [dev, staging, main]
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Set up Python
+        run: uv python install
+
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+
+      - name: Lint (ruff check)
+        run: uv run ruff check .
+
+      - name: Lint (ruff format check)
+        run: uv run ruff format --check .
+
+      - name: Run unit tests
+        run: |
+          uv run pytest tests/ -v || [ $? -eq 5 ]
+
+      - name: Smoke train (small sample)
+        run: |
+          uv run python -c "
+          from sklearn.datasets import fetch_openml
+          from sklearn.ensemble import RandomForestClassifier
+          from sklearn.model_selection import train_test_split
+          import pandas as pd
+
+          df = fetch_openml('adult', version=2, as_frame=True).frame.sample(300, random_state=42)
+          y = (df['class'] == '>50K').astype(int)
+          X = pd.get_dummies(df.drop(columns='class'))
+          X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+          model = RandomForestClassifier(n_estimators=10, max_depth=4, random_state=42)
+          model.fit(X_train, y_train)
+          print('Smoke train OK, accuracy:', model.score(X_test, y_test))
+          "
