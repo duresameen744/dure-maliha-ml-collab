@@ -20,7 +20,7 @@ def get_git_sha():
             .decode()
             .strip()
         )
-    except Exception:
+    except (subprocess.CalledProcessError, OSError):
         return "unknown"
 
 
