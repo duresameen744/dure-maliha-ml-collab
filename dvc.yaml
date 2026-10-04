@@ -1,0 +1,39 @@
+stages:
+  prepare:
+    cmd: python -m src.prepare
+    deps:
+      - src/prepare.py
+      - src/data_cleaning.py
+      - data/raw/adult.csv
+    params:
+      - seed
+      - split.test_size
+    outs:
+      - data/processed/X_train.csv
+      - data/processed/X_test.csv
+      - data/processed/y_train.csv
+      - data/processed/y_test.csv
+
+  train:
+    cmd: python -m src.train
+    deps:
+      - src/train.py
+      - data/processed/X_train.csv
+      - data/processed/y_train.csv
+    params:
+      - seed
+      - train.n_estimators
+      - train.max_depth
+    outs:
+      - models/model.pkl
+
+  evaluate:
+    cmd: python -m src.evaluate
+    deps:
+      - src/evaluate.py
+      - models/model.pkl
+      - data/processed/X_test.csv
+      - data/processed/y_test.csv
+    metrics:
+      - metrics.json:
+          cache: false
